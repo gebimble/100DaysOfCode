@@ -12,12 +12,12 @@ TimeDict = Dict[str, float]
 alphas = [chr(x) for x in range(97, 123)]
 
 
-def del_mistake() -> None:
+def del_mistake(mistakes: int=1) -> None:
     """Delete's mistake."""
-    sys.stdout.write('\b \b')
+    sys.stdout.write(mistakes*'\b')
+    sys.stdout.write(' \b')
     sys.stdout.flush()
     time.sleep(normalvariate(0.2, 0.01))
-
 
     return None
 

@@ -1,0 +1,14 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+begin_x	curses_example.py	/^begin_x = 20$/;"	v
+begin_y	curses_example.py	/^begin_y = 7$/;"	v
+height	curses_example.py	/^height = 5$/;"	v
+stdscr	curses_example.py	/^stdscr = curses.initscr()$/;"	v
+tb	curses_example.py	/^tb = curses.textpad.Textbox(win)$/;"	v
+text	curses_example.py	/^text = tb.edit()$/;"	v
+width	curses_example.py	/^width = 40$/;"	v
+win	curses_example.py	/^win = curses.newwin(height, width, begin_y, begin_x)$/;"	v
