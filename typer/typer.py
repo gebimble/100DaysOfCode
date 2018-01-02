@@ -2,11 +2,40 @@
 
 import sys
 import time
-from random import normalvariate
+from random import choice, normalvariate, uniform
 from typing import Dict
 
 
 TimeDict = Dict[str, float]
+
+# create list of letters a-z
+alphas = [chr(x) for x in range(97, 123)]
+
+
+def del_mistake() -> None:
+    """Delete's mistake."""
+    sys.stdout.write('\b \b')
+    sys.stdout.flush()
+    time.sleep(normalvariate(0.2, 0.01))
+
+
+    return None
+
+
+def mistake(correct: str, incorrect: str) -> True:
+    """Write's the incorrect character, then deletes it, writing the correct
+    one."""
+    sys.stdout.write(incorrect)
+    sys.stdout.flush()
+
+    time.sleep(normalvariate(0.5, 0.01))
+
+    del_mistake()
+    sys.stdout.write(correct)
+    sys.stdout.flush()
+
+    return True 
+
 
 def typer(str_to_print: str, times: Dict={}) -> None:
     """Producing 'as typed' style printing.
@@ -24,7 +53,19 @@ def typer(str_to_print: str, times: Dict={}) -> None:
     key_set = set(times.keys())
 
     for char in str_to_print:
-        sys.stdout.write(char)
+
+        if uniform(0, 1) >= 0.9:
+
+            mistake_char = choice(alphas)
+
+            while mistake_char is char:
+                mistake_char = choice(alphas)
+            else:
+                mistake(char, choice(alphas))
+
+        else:
+            sys.stdout.write(char)
+
         sys.stdout.flush()
 
         if char in key_set:

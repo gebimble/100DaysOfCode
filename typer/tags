@@ -5,6 +5,9 @@
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 TimeDict	typer.py	/^TimeDict = Dict[str, float]$/;"	v
-string_to_print	test.py	/^string_to_print = "Hello, dog.\\nWho's a good boy? Is it you?\\nYes. Yes it is."$/;"	v
-time_dictionary	test.py	/^time_dictionary = {$/;"	v
+alphas	typer.py	/^alphas = [chr(x) for x in range(97, 123)]$/;"	v
+del_mistake	typer.py	/^def del_mistake() -> None:$/;"	f
+mistake	typer.py	/^def mistake(correct: str, incorrect: str) -> True:$/;"	f
+string_to_print	example.py	/^string_to_print = "Hello, dog.\\nWho's a good boy? Is it you?\\nYes. Yes it is."$/;"	v
+time_dictionary	example.py	/^time_dictionary = {$/;"	v
 typer	typer.py	/^def typer(str_to_print: str, times: Dict={}) -> None:$/;"	f
