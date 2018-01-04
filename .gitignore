@@ -1,1 +1,5 @@
+# ignore all swp files
+/*/*.swp
+
+# ignore sensitive data
 /co-op_add/user_data.txt
