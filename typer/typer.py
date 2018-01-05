@@ -1,5 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """Function for printing in an 'as typed' fashion."""
-
 import sys
 import time
 from random import choice, normalvariate, uniform
@@ -12,7 +13,7 @@ TimeDict = Dict[str, float]
 alphas = [chr(x) for x in range(97, 123)]
 
 
-def del_mistake(mistakes: int=1) -> None:
+def del_mistake(mistakes: int = 1) -> None:
     """Delete's mistake."""
     sys.stdout.write(mistakes*'\b')
     sys.stdout.write(' \b')
@@ -34,10 +35,10 @@ def mistake(correct: str, incorrect: str) -> True:
     sys.stdout.write(correct)
     sys.stdout.flush()
 
-    return True 
+    return True
 
 
-def typer(str_to_print: str, times: Dict={}) -> None:
+def typer(str_to_print: str, times: Dict = {}) -> None:
     """Producing 'as typed' style printing.
 
     Args:
@@ -77,3 +78,18 @@ def typer(str_to_print: str, times: Dict={}) -> None:
     print()
 
     return None
+
+
+if __name__ == '__main__':
+    string_to_print = "Hello, dog.\nWho's a good boy? Is it you?\nYes. Yes it is."
+    time_dictionary = {
+        '.': 1.,
+        ',': .5,
+        ';': .7,
+        ':': .8,
+        '?': 1.,
+        '!': 1.,
+        ' ': .1,
+    }
+
+    typer(string_to_print, time_dictionary)

@@ -17,7 +17,7 @@ from selenium.webdriver.common.by import By
 class CoOp(object):
     """Object for manipulating bits of the Co-Operative website."""
 
-    def __init__(self, headless=True):
+    def __init__(self, headless: bool = True) -> None:
         sign_in_url = 'https://membership.coop.co.uk/sign-in'
 
         user_data_file = 'user_data.txt'
@@ -63,7 +63,7 @@ class CoOp(object):
 
         return None
 
-    def add_receipt(self, *args):
+    def add_receipt(self, *args) -> None:
         """Add a receipt."""
 
         args = [str(x) for x in args]
@@ -129,7 +129,7 @@ class CoOp(object):
 
         return None
 
-    def exit_driver(self):
+    def exit_driver(self) -> None:
         """Close the webdriver."""
 
         print('Exiting driver.')
@@ -137,7 +137,8 @@ class CoOp(object):
 
 
 if __name__ == '__main__':
-    headless, till_id, store_id, day, month, year, transaction_no = sys.argv[1:]
+    headless, till_id, store_id, day, month, year, transaction_no\
+            = sys.argv[1:]
     headless = bool(headless)
     coop = CoOp(headless)
     coop.add_receipt(till_id, store_id, day, month, year, transaction_no)
