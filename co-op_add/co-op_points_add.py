@@ -9,87 +9,136 @@ Add points to your co-op membership thing, the automated way!"""
 import sys
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
-sign_in_url = 'https://membership.coop.co.uk/sign-in'
 
-user_data_file = 'user_data.txt'
+class CoOp(object):
+    """Object for manipulating bits of the Co-Operative website."""
 
-with open(user_data_file) as f:
-    sign_in_data = {}
+    def __init__(self, headless=True):
+        sign_in_url = 'https://membership.coop.co.uk/sign-in'
 
-    for line in f:
-        key, value = line.strip().split(':')
-        sign_in_data[key] = value
+        user_data_file = 'user_data.txt'
 
-transaction_keys = (
-    'till-id',
-    'store-id',
-    'day-of-transaction',
-    'month-of-transaction',
-    'year-of-transaction',
-    'transaction-id',
-)
+        with open(user_data_file) as f:
+            sign_in_data = {}
 
-transaction_info = {}
+            for line in f:
+                key, value = line.strip().split(':')
+                sign_in_data[key] = value
 
-for i, arg in enumerate(sys.argv[1:]):
-    transaction_info[transaction_keys[i]] = arg
+        chrome_options = Options()
+        chrome_options.set_headless(headless)
 
-chrome_options = Options()
-chrome_options.set_headless(True)
+        self.driver = webdriver.Chrome(chrome_options=chrome_options)
 
-# driver = webdriver.Chrome(chrome_options=chrome_options)
-driver = webdriver.Chrome()
-driver.get(sign_in_url)
+        self.driver.get(sign_in_url)
 
-sign_in_title = driver.title
-print(f'At page: "{sign_in_title}".')
+        sign_in_title = self.driver.title
+        print(f'At page: "{sign_in_title}".')
 
-print('Filling in login information.')
-for key in sign_in_data.keys():
-    input_element = driver.find_element_by_name('member-'+key)
-    input_element.send_keys(sign_in_data[key])
+        try:
+            print('Filling in login information.')
+            for key, value in sign_in_data.items():
+                input_element = self.driver.find_element_by_name('member-'+key)
+                input_element.send_keys(value)
+        except:
+            print('Unable to sign in')
+            self.exit_driver()
+            raise SystemExit
 
-input_element.submit()
-print('Signed in!')
+        input_element.submit()
+        print('Signed in!')
 
-WebDriverWait(driver, 15).until_not(EC.title_is(sign_in_title))
+        try:
+            WebDriverWait(self.driver,
+                          15).until_not(EC.title_is(sign_in_title))
+        except TimeoutError:
+            print(f'Timeout exception - expected page title, "{sign_in_title}",\
+                  could not be found.')
+            self.exit_driver()
+            raise SystemExit
 
-signed_in_title = driver.title
-print(f'At page: "{signed_in_title}".')
+        return None
 
-link_text = 'Add a missed receipt'
+    def add_receipt(self, *args):
+        """Add a receipt."""
 
-input_element = driver.find_element_by_link_text(link_text)
+        args = [str(x) for x in args]
 
-print(f'Clicking link: "{link_text}".')
-input_element.click()
+        transaction_keys = (
+            'till-id',
+            'store-id',
+            'day-of-transaction',
+            'month-of-transaction',
+            'year-of-transaction',
+            'transaction-id',
+        )
 
-WebDriverWait(driver, 15).until_not(EC.title_is(signed_in_title))
+        self.transaction_info = {}
 
-receipt_add_title = driver.title
-print(f'At page: "{receipt_add_title}".')
+        for i, arg in enumerate(args):
+            self.transaction_info[transaction_keys[i]] = arg
 
-print('Filling in receipt information.')
-for key in transaction_info.keys():
-    input_element = driver.find_element_by_id(key)
-    input_element.send_keys(transaction_info[key])
+        signed_in_title = self.driver.title
+        print(f'At page: "{signed_in_title}".')
 
-print('Submitting receipt information.')
-input_element.submit()
+        link_text = 'Add a missed receipt'
 
-WebDriverWait(driver, 15).until(
-    EC.presence_of_element_located(
-        (By.XPATH, '//div[@class="message message-success"]')
-    )
-)
+        input_element = self.driver.find_element_by_link_text(link_text)
 
-receipt_added_title = driver.title
-print(f'At page: "{receipt_added_title}".')
+        print(f'Clicking link: "{link_text}".')
+        input_element.click()
 
-print('Exiting driver.')
-driver.close()
+        try:
+            WebDriverWait(self.driver,
+                          15).until_not(EC.title_is(signed_in_title))
+        except TimeoutError:
+            print(f'Timeout exception - expected page title, "{signed_in_title}",\
+                  could not be found.')
+
+            return None
+
+        receipt_add_title = self.driver.title
+        print(f'At page: "{receipt_add_title}".')
+
+        print('Filling in receipt information.')
+        for key, value in self.transaction_info.items():
+            input_element = self.driver.find_element_by_id(key)
+            input_element.send_keys(value)
+
+        print('Submitting receipt information.')
+        input_element.submit()
+
+        try:
+            success_xpath = '//div[@class="message message-success"]'
+            WebDriverWait(self.driver, 15).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, success_xpath)
+                )
+            )
+        finally:
+            print(f'Timeout exception - expected xpath, "{success_xpath}", could not be found.')
+
+            return None
+
+        receipt_added_title = self.driver.title
+        print(f'At page: "{receipt_added_title}".')
+
+        return None
+
+    def exit_driver(self):
+        """Close the webdriver."""
+
+        print('Exiting driver.')
+        self.driver.close()
+
+
+if __name__ == '__main__':
+    headless, till_id, store_id, day, month, year, transaction_no = sys.argv[1:]
+    headless = bool(headless)
+    coop = CoOp(headless)
+    coop.add_receipt(till_id, store_id, day, month, year, transaction_no)
+    coop.exit_driver()

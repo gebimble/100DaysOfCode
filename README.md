@@ -23,3 +23,7 @@ Created a Selenium-based webdriver application for easily adding co-op grocery
 transactions to my co-op membership card. Learnt about the `.gitignore` file
 for protecting my login information, and learnt about interacting with website
 using Selenium. Feeling RAD.
+
+## Day 5
+Turned the co-op thing into a class, added some error handling. Really pleased
+with it :)
